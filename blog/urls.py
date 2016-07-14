@@ -17,13 +17,28 @@ from django.conf import settings
 from django.conf.urls import patterns, include, url
 from django.conf.urls.static import static
 from django.contrib import admin
-
+from django.contrib.sitemaps.views import sitemap
+from rest_framework import routers
 # urlpatterns = [
 #     url(r'^admin/', admin.site.urls),
 # ]
 
+from blogpost import views as blogpostViews
+
+from sitemap.sitemaps import BlogSitemap, PageSitemap, FlatPageSitemap
+
+sitemaps =  {
+    "page": PageSitemap,
+    'flatpages': FlatPageSitemap,
+    "blog": BlogSitemap
+}
+
 urlpatterns = patterns('',
-    (r'^$', 'blogpost.views.index'),
+    url(r'^$', blogpostViews.index, name='main'),
     url(r'^blog/(?P<slug>[^\.]+).html', 'blogpost.views.view_post', name='view_blog_post'),
-    url(r'^admin/', include(admin.site.urls))
-)
+    url(r'^comments/', include('django_comments.urls')),
+    url(r'^admin/', include(admin.site.urls)),
+    url(r'^pages/', include('django.contrib.flatpages.urls')),
+    url(r'^sitemap\.xml$', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
+    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework'))
+) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
