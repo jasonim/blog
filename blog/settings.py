@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'django_comments',
     'django.contrib.sitemaps',
     'rest_framework',
+    'corsheaders',
     'blogpost',
 
 ]
@@ -57,6 +58,8 @@ MIDDLEWARE_CLASSES = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
 ]
 
 ROOT_URLCONF = 'blog.urls'

@@ -27,6 +27,12 @@ from blogpost import views as blogpostViews
 
 from sitemap.sitemaps import BlogSitemap, PageSitemap, FlatPageSitemap
 
+from rest_framework import routers
+from blogpost.api import BlogpostSet
+
+apiRouter = routers.DefaultRouter()
+apiRouter.register(r'blogpost', BlogpostSet, 'Blogpost')
+
 sitemaps =  {
     "page": PageSitemap,
     'flatpages': FlatPageSitemap,
@@ -40,5 +46,6 @@ urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
     url(r'^pages/', include('django.contrib.flatpages.urls')),
     url(r'^sitemap\.xml$', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
-    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework'))
+    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+    url(r'^api/', include(apiRouter.urls)),
 ) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
